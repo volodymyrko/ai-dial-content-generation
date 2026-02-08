@@ -25,7 +25,24 @@ def start() -> None:
     #        Specification but since requests are going to the DIAL Core, we can use different models and DIAL Core
     #        will adapt them to format Gemini or Anthropic is using. In case if we go directly to
     #        the https://api.anthropic.com/v1/complete we need to follow Anthropic request Specification (the same for gemini)
-    raise NotImplementedError
+    # raise NotImplementedError
+    client = DialModelClient(DIAL_CHAT_COMPLETIONS_ENDPOINT, 'gpt-4.1-mini-2025-04-14', API_KEY)
 
+    # 1. image url
+    # image_url = 'https://a-z-animals.com/media/2019/11/Elephant-male-1024x535.jpg'
+    # 2. base64 encoded
+    image_url = f'data:image/png;base64,{base64_image}'
+    messages = [
+        ContentedMessage(
+            role=Role.USER,
+            content=[
+                TxtContent(text='Describe the images'),
+                ImgContent(ImgUrl(url=image_url))
+            ]
+        )
+    ]
+
+    ai_response = client.get_completion(messages)
+    print(ai_response)
 
 start()
